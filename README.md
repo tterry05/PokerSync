@@ -1,10 +1,10 @@
 # Template front-end code created by lovable.dev
 TODO:
-Connect supabase backend
-Create API to talk to supabase
-Connected API and supabase to frontend for leaderboard and session functionality
-Create deployment via github actions
-Host website for use
+### Connect supabase backend
+### Create API to talk to supabase
+### Connected API and supabase to frontend for leaderboard and session functionality
+### Create deployment via github actions
+### Host website for use
 
 
 # Step 1: Clone the repository using the project's Git URL.
