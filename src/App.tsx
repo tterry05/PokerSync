@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./components/layout/Navbar";
 import Index from "./pages/Index";
@@ -11,6 +11,19 @@ import Players from "./pages/Players";
 import Sessions from "./pages/Sessions";
 
 const queryClient = new QueryClient();
+
+// TODO: Replace with actual auth check
+const isAdmin = () => {
+  // This should be replaced with actual auth logic
+  return localStorage.getItem("isAdmin") === "true";
+};
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  if (!isAdmin()) {
+    return <Navigate to="/" replace />;
+  }
+  return <>{children}</>;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -24,8 +37,22 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/players" element={<Players />} />
-              <Route path="/sessions" element={<Sessions />} />
+              <Route 
+                path="/players" 
+                element={
+                  <ProtectedRoute>
+                    <Players />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/sessions" 
+                element={
+                  <ProtectedRoute>
+                    <Sessions />
+                  </ProtectedRoute>
+                } 
+              />
             </Routes>
           </AnimatePresence>
         </div>
