@@ -1,27 +1,27 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import GameCard from "@/components/schedule/GameCard";
 import { format, isFuture, parseISO } from "date-fns";
+import supabase from "../lib/supabaseClient";
 
 const Index = () => {
-  // Temporary mock data - replace with API calls
-  const games = [
-    {
-      id: 1,
-      date: "2024-04-20",
-      time: "19:00",
-      location: "John's Place",
-      gameType: "Texas Hold'em",
-      buyIn: 100,
-    },
-    {
-      id: 2,
-      date: "2024-01-15", // Past date
-      time: "20:00",
-      location: "Poker Room",
-      gameType: "Omaha",
-      buyIn: 200,
-    },
-  ];
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    const fetchGames = async () => {
+      const { data, error } = await supabase
+        .from('Sessions')
+        .select('id, date, time, location, gameType, buyIn');
+
+      if (error) {
+        console.error("Error fetching games:", error);
+      } else {
+        setGames(data);
+      }
+    };
+
+    fetchGames();
+  }, []);
 
   const sortedGames = [...games].sort((a, b) => 
     parseISO(a.date).getTime() - parseISO(b.date).getTime()
@@ -30,7 +30,7 @@ const Index = () => {
   const futureGames = sortedGames.filter(game => 
     isFuture(parseISO(`${game.date}T${game.time}`))
   );
-  
+
   const pastGames = sortedGames.filter(game => 
     !isFuture(parseISO(`${game.date}T${game.time}`))
   ).reverse(); // Most recent first

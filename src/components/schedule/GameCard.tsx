@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { CalendarIcon, ClockIcon, MapPinIcon } from "lucide-react";
+import { format, parseISO } from "date-fns";
 
 interface GameCardProps {
   date: string;
@@ -10,6 +11,8 @@ interface GameCardProps {
 }
 
 const GameCard = ({ date, time, location, gameType, buyIn }: GameCardProps) => {
+  const formattedTime = format(parseISO(`${date}T${time}`), "hh:mm a");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -33,7 +36,7 @@ const GameCard = ({ date, time, location, gameType, buyIn }: GameCardProps) => {
           
           <div className="flex items-center space-x-2 text-muted-foreground">
             <ClockIcon className="w-4 h-4" />
-            <span>{time}</span>
+            <span>{formattedTime}</span>
           </div>
           
           <div className="flex items-center space-x-2 text-muted-foreground">

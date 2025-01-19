@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./components/layout/Navbar";
-import Index from "./pages/Index";
+import Schedule from "./pages/Schedule";
 import Leaderboard from "./pages/Leaderboard";
 import Players from "./pages/Players";
 import Sessions from "./pages/Sessions";
@@ -35,7 +35,7 @@ const App = () => (
           <Navbar />
           <AnimatePresence mode="wait">
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Schedule />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route 
                 path="/players" 
