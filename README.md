@@ -1,8 +1,7 @@
 # Template front-end code created by lovable.dev
 TODO:
-### Connect supabase backend
-### Create API to talk to supabase
-### Connected API and supabase to frontend for leaderboard and session functionality
+### DONE Connect supabase backend DONE
+### DONE Connected supabase to frontend for leaderboard and session functionality DONE
 ### Create deployment via github actions
 ### Host website for use
 
@@ -18,4 +17,15 @@ npm i
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
+```
+
+To fully use this add supabaseClient.ts to the lib file and add this code
+```
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = 'YOUR URL'
+const supabaseKey = 'YOUR ANON KEY'
+const supabase = createClient(supabaseUrl, supabaseKey)
+
+export default supabase
 ```
