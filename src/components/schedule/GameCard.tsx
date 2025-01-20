@@ -30,7 +30,7 @@ const GameCard = ({ date, time, location, gameType, buyIn, name, description }: 
                 {name}
               </span>
             )}
-            <span className="text-sm font-medium text-poker-gold px-3 py-1 bg-poker-gold/10 rounded-full">
+            <span className="text-sm font-medium text-poker-gold px-3 py-1 bg-poker-gold/10 rounded-full inline-block w-fit">
               {gameType}
             </span>
           </div>

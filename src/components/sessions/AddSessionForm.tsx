@@ -45,7 +45,17 @@ interface AddSessionFormProps {
 const AddSessionForm = ({ onSuccess }: AddSessionFormProps) => {
   const { fetchSessions } = useSessionContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const form = useForm<SessionFormData>();
+  const form = useForm<SessionFormData>({
+    defaultValues: {
+      date: '',
+      time: '',
+      location: '',
+      gameType: '',
+      buyIn: 0,
+      name: '',
+      description: ''
+    }
+  });
 
   const onSubmit = async (data: SessionFormData) => {
     setIsSubmitting(true);
@@ -65,7 +75,7 @@ const AddSessionForm = ({ onSuccess }: AddSessionFormProps) => {
       if (error) throw error;
       await fetchSessions(); // Refresh the sessions list
       toast.success("Session created successfully");
-      form.reset();
+      form.reset(); // Reset form to default values
       if (onSuccess) {
         onSuccess();
       }
