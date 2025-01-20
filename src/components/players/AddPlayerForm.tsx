@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import supabase from "@/lib/supabaseClient";
 
 interface PlayerFormData {
   name: string;
@@ -18,7 +19,11 @@ interface PlayerFormData {
   wins: number;
 }
 
-const AddPlayerForm = () => {
+interface AddPlayerFormProps {
+  onSubmitComplete?: () => void;
+}
+
+const AddPlayerForm = ({ onSubmitComplete }: AddPlayerFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<PlayerFormData>({
     defaultValues: {
@@ -30,11 +35,19 @@ const AddPlayerForm = () => {
   const onSubmit = async (data: PlayerFormData) => {
     setIsSubmitting(true);
     try {
-      // TODO: Replace with actual API call
-      console.log("Adding player:", data);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      const { error } = await supabase
+        .from('Players')
+        .insert([{ 
+          name: data.name,
+          earnings: data.earnings,
+          wins: data.wins
+        }]);
+
+      if (error) throw error;
+      
       toast.success("Player added successfully");
       form.reset();
+      onSubmitComplete?.();
     } catch (error) {
       console.error("Error adding player:", error);
       toast.error("Failed to add player");
