@@ -18,14 +18,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import supabase from "@/lib/supabaseClient";
+import { useSessionContext } from '@/contexts/SessionContext';
 
 interface SessionFormData {
   date: string;
   time: string;
   location: string;
   gameType: string;
-  buyIn: string;
-  players: string[];
+  buyIn: number;
+  name: string;
 }
 
 const GAME_TYPES = [
@@ -35,18 +37,36 @@ const GAME_TYPES = [
   "Five Card Draw",
 ];
 
-const AddSessionForm = () => {
+interface AddSessionFormProps {
+  onSuccess?: () => void;
+}
+
+const AddSessionForm = ({ onSuccess }: AddSessionFormProps) => {
+  const { fetchSessions } = useSessionContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<SessionFormData>();
 
   const onSubmit = async (data: SessionFormData) => {
     setIsSubmitting(true);
     try {
-      // TODO: Replace with actual API call
-      console.log("Creating session:", data);
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
+      const { error } = await supabase
+        .from('Sessions')
+        .insert([{
+          date: data.date,
+          time: data.time,
+          location: data.location,
+          gameType: data.gameType,
+          buyIn: data.buyIn,
+          name: data.name
+        }]);
+
+      if (error) throw error;
+      await fetchSessions(); // Refresh the sessions list
       toast.success("Session created successfully");
       form.reset();
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error) {
       console.error("Error creating session:", error);
       toast.error("Failed to create session");
@@ -58,6 +78,19 @@ const AddSessionForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Session Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter session name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
