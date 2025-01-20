@@ -11,7 +11,7 @@ interface GameCardProps {
 }
 
 const GameCard = ({ date, time, location, gameType, buyIn }: GameCardProps) => {
-  const formattedTime = format(parseISO(`${date}T${time}`), "hh:mm a");
+  const formattedTime = format(parseISO(`${date}T${time}`), "EEEE hh:mm a");
 
   return (
     <motion.div

@@ -14,11 +14,18 @@ import { toast } from "sonner";
 
 interface PlayerFormData {
   name: string;
+  earnings: number;
+  wins: number;
 }
 
 const AddPlayerForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const form = useForm<PlayerFormData>();
+  const form = useForm<PlayerFormData>({
+    defaultValues: {
+      earnings: 0,
+      wins: 0
+    }
+  });
 
   const onSubmit = async (data: PlayerFormData) => {
     setIsSubmitting(true);
@@ -47,6 +54,32 @@ const AddPlayerForm = () => {
               <FormLabel>Player Name</FormLabel>
               <FormControl>
                 <Input placeholder="Enter player name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="earnings"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Initial Earnings</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Enter initial earnings" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="wins"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Initial Wins</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Enter number of wins" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
