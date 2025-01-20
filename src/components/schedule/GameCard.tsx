@@ -8,9 +8,10 @@ interface GameCardProps {
   location: string;
   gameType: string;
   buyIn: number;
+  name: string;
 }
 
-const GameCard = ({ date, time, location, gameType, buyIn }: GameCardProps) => {
+const GameCard = ({ date, time, location, gameType, buyIn, name }: GameCardProps) => {
   const formattedTime = format(parseISO(`${date}T${time}`), "EEEE hh:mm a");
 
   return (
@@ -22,9 +23,16 @@ const GameCard = ({ date, time, location, gameType, buyIn }: GameCardProps) => {
     >
       <div className="flex flex-col space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-poker-gold px-3 py-1 bg-poker-gold/10 rounded-full">
-            {gameType}
-          </span>
+          <div className="flex flex-col space-y-2">
+            {name && (
+              <span className="text-lg font-bold text-foreground">
+                {name}
+              </span>
+            )}
+            <span className="text-sm font-medium text-poker-gold px-3 py-1 bg-poker-gold/10 rounded-full">
+              {gameType}
+            </span>
+          </div>
           <span className="text-lg font-bold">${buyIn}</span>
         </div>
         

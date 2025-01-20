@@ -11,7 +11,7 @@ const Index = () => {
     const fetchGames = async () => {
       const { data, error } = await supabase
         .from('Sessions')
-        .select('id, date, time, location, gameType, buyIn');
+        .select('id, date, time, location, gameType, buyIn, name');
 
       if (error) {
         console.error("Error fetching games:", error);
