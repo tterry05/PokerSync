@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,35 +11,45 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import supabase from "@/lib/supabaseClient";
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // Get auth state from localStorage
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login attempt:", { username, password });
-    
-    // TODO: Replace with actual auth logic
-    if (username === "username" && password === "password") {
-      localStorage.setItem("isAdmin", "true");
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
       setIsLoginOpen(false);
       toast.success("Logged in successfully");
-      window.location.reload(); // Refresh to update nav visibility
-    } else {
-      toast.error("Invalid credentials");
+      navigate(location.pathname); // Refresh current route
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAdmin");
-    toast.success("Logged out successfully");
-    window.location.reload(); // Refresh to update nav visibility
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast.success("Logged out successfully");
+      navigate("/"); // Redirect to home
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   const publicLinks = [
@@ -47,12 +57,12 @@ const Navbar = () => {
     { to: "/leaderboard", label: "Leaderboard" },
   ];
 
-  const adminLinks = [
+  const authenticatedLinks = [
     { to: "/players", label: "Players" },
     { to: "/sessions", label: "Sessions" },
   ];
 
-  const links = [...publicLinks, ...(isAdmin ? adminLinks : [])];
+  const links = [...publicLinks, ...(user ? authenticatedLinks : [])];
 
   return (
     <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-lg border-b border-border z-50">
@@ -89,7 +99,7 @@ const Navbar = () => {
               ))}
             </div>
 
-            {isAdmin ? (
+            {user ? (
               <Button 
                 variant="outline"
                 onClick={handleLogout}
@@ -103,14 +113,15 @@ const Navbar = () => {
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Admin Login</DialogTitle>
+                    <DialogTitle>Login</DialogTitle>
                   </DialogHeader>
                   <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
                       <Input
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                       />
                       <Input
                         type="password"
