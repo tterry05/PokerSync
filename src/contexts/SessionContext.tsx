@@ -2,6 +2,7 @@ import { createContext, useContext, ReactNode, useState, useCallback } from 'rea
 import supabase from '@/lib/supabaseClient';
 
 interface Session {
+  description: any;
   id: string;
   date: string;
   time: string;

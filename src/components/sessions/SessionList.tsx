@@ -24,6 +24,7 @@ interface Session {
   gameType: string;
   buyIn: number;
   name: string;
+  description?: string;
 }
 
 const SessionList = () => {
@@ -36,6 +37,7 @@ const SessionList = () => {
   const [editLocation, setEditLocation] = useState("");
   const [editGameType, setEditGameType] = useState("");
   const [editBuyIn, setEditBuyIn] = useState(0);
+  const [editDescription, setEditDescription] = useState("");
 
   useEffect(() => {
     const loadSessions = async () => {
@@ -53,6 +55,7 @@ const SessionList = () => {
     setEditLocation(session.location);
     setEditGameType(session.gameType);
     setEditBuyIn(session.buyIn);
+    setEditDescription(session.description || "");
   };
 
   const handleSave = async (id: string) => {
@@ -65,7 +68,8 @@ const SessionList = () => {
           time: editTime,
           location: editLocation,
           gameType: editGameType,
-          buyIn: editBuyIn
+          buyIn: editBuyIn,
+          description: editDescription
         })
         .eq('id', id);
 
@@ -153,6 +157,11 @@ const SessionList = () => {
                     onChange={(e) => setEditBuyIn(Number(e.target.value))}
                     placeholder="Buy-in Amount"
                   />
+                  <Input
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    placeholder="Description (optional)"
+                  />
                 </div>
               ) : (
                 <>
@@ -171,6 +180,12 @@ const SessionList = () => {
                       <span className="font-medium">Buy-in:</span> ${session.buyIn}
                     </div>
                   </div>
+                  {session.description && (
+                    <div className="mt-3 border-t pt-2">
+                      <span className="text-xs font-medium text-muted-foreground">Notes:</span>
+                      <p className="text-sm text-foreground mt-1">{session.description}</p>
+                    </div>
+                  )}
                 </>
               )}
             </div>

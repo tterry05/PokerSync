@@ -9,9 +9,10 @@ interface GameCardProps {
   gameType: string;
   buyIn: number;
   name: string;
+  description?: string;
 }
 
-const GameCard = ({ date, time, location, gameType, buyIn, name }: GameCardProps) => {
+const GameCard = ({ date, time, location, gameType, buyIn, name, description }: GameCardProps) => {
   const formattedTime = format(parseISO(`${date}T${time}`), "EEEE hh:mm a");
 
   return (
@@ -39,7 +40,7 @@ const GameCard = ({ date, time, location, gameType, buyIn, name }: GameCardProps
         <div className="space-y-2">
           <div className="flex items-center space-x-2 text-muted-foreground">
             <CalendarIcon className="w-4 h-4" />
-            <span>{date}</span>
+            <span>{format(parseISO(date), "MM/dd/yyyy")}</span>
           </div>
           
           <div className="flex items-center space-x-2 text-muted-foreground">
@@ -51,6 +52,12 @@ const GameCard = ({ date, time, location, gameType, buyIn, name }: GameCardProps
             <MapPinIcon className="w-4 h-4" />
             <span>{location}</span>
           </div>
+          {description && (
+            <div className="mt-3 border-t pt-2">
+              <span className="text-xs font-medium text-muted-foreground">Description:</span>
+              <p className="text-sm text-foreground mt-1">{description}</p>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

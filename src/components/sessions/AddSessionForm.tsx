@@ -28,6 +28,7 @@ interface SessionFormData {
   gameType: string;
   buyIn: number;
   name: string;
+  description?: string;
 }
 
 const GAME_TYPES = [
@@ -57,7 +58,8 @@ const AddSessionForm = ({ onSuccess }: AddSessionFormProps) => {
           location: data.location,
           gameType: data.gameType,
           buyIn: data.buyIn,
-          name: data.name
+          name: data.name,
+          description: data.description
         }]);
 
       if (error) throw error;
@@ -168,6 +170,20 @@ const AddSessionForm = ({ onSuccess }: AddSessionFormProps) => {
               <FormLabel>Buy-in Amount</FormLabel>
               <FormControl>
                 <Input type="number" placeholder="Enter buy-in amount" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter session description (optional)" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
