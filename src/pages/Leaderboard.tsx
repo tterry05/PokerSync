@@ -2,25 +2,45 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import LeaderboardCard from "@/components/leaderboard/LeaderboardCard";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import supabase from "@/lib/supabaseClient";
 
 type SortType = "wins" | "earnings";
 
 const Leaderboard = () => {
   const [sortBy, setSortBy] = useState<SortType>("wins");
+  const [players, setPlayers] = useState([]);
 
-  // Temporary mock data - replace with API calls
-  const players = [
-    { id: 1, rank: 1, name: "Alex Smith", wins: 15, totalEarnings: 5000 },
-    { id: 2, rank: 2, name: "Sarah Johnson", wins: 12, totalEarnings: 4200 },
-    { id: 3, rank: 3, name: "Mike Brown", wins: 10, totalEarnings: 3800 },
-    { id: 4, rank: 4, name: "Emma Davis", wins: 8, totalEarnings: 3000 },
-  ];
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      const { data, error } = await supabase
+        .from('Players')
+        .select('id, name, wins, earnings');
+
+      if (error) {
+        console.error("Error fetching games:", error);
+      } else {
+        setPlayers(data);
+      }
+    };
+
+    fetchPlayers();
+  }, []);
 
   const sortedPlayers = [...players].sort((a, b) => {
     if (sortBy === "wins") {
+      // First sort by wins, then by earnings if wins are equal
+      if (b.wins !== a.wins) {
+        return b.wins - a.wins;
+      }
+      return b.earnings - a.earnings;
+    } else {
+      // First sort by earnings, then by wins if earnings are equal
+      if (b.earnings !== a.earnings) {
+        return b.earnings - a.earnings;
+      }
       return b.wins - a.wins;
     }
-    return b.totalEarnings - a.totalEarnings;
   }).map((player, index) => ({ ...player, rank: index + 1 }));
 
   return (
@@ -56,8 +76,12 @@ const Leaderboard = () => {
         </div>
 
         <div className="space-y-4">
-          {sortedPlayers.map((player) => (
-            <LeaderboardCard key={player.id} {...player} />
+          {sortedPlayers.map((player, index) => (
+            <LeaderboardCard 
+              key={player.id} 
+              {...player} 
+              index={index}
+            />
           ))}
         </div>
       </div>
