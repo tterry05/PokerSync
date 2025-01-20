@@ -26,7 +26,7 @@ const Navbar = () => {
     console.log("Login attempt:", { username, password });
     
     // TODO: Replace with actual auth logic
-    if (username === "admin" && password === "admin") {
+    if (username === "username" && password === "password") {
       localStorage.setItem("isAdmin", "true");
       setIsLoginOpen(false);
       toast.success("Logged in successfully");
