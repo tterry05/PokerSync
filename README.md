@@ -18,7 +18,7 @@ npm i
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 
-To fully use this add supabaseClient.ts to the lib file and add this code
+# To fully use this add supabaseClient.ts to the lib file and add this code
 ```
 import { createClient } from '@supabase/supabase-js'
 
