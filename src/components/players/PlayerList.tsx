@@ -17,8 +17,8 @@ const PlayerList = forwardRef((props, ref) => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
-  const [editEarnings, setEditEarnings] = useState(0);
-  const [editWins, setEditWins] = useState(0);
+  const [editEarnings, setEditEarnings] = useState<number | null>(0);
+  const [editWins, setEditWins] = useState<number | null>(0);
   const [loading, setLoading] = useState(true);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [playerToDelete, setPlayerToDelete] = useState<Player | null>(null);
@@ -51,8 +51,8 @@ const PlayerList = forwardRef((props, ref) => {
   const handleEdit = (player: Player) => {
     setEditingId(player.id);
     setEditName(player.name);
-    setEditEarnings(player.earnings);
-    setEditWins(player.wins);
+    setEditEarnings(player.earnings || null);
+    setEditWins(player.wins || null);
   };
 
   const handleSave = async (id: string) => {
@@ -61,8 +61,8 @@ const PlayerList = forwardRef((props, ref) => {
         .from('Players')
         .update({
           name: editName,
-          earnings: editEarnings,
-          wins: editWins
+          earnings: editEarnings ?? 0,
+          wins: editWins ?? 0
         })
         .eq('id', id);
 
@@ -140,8 +140,8 @@ const PlayerList = forwardRef((props, ref) => {
                 <label className="block text-sm font-medium md:hidden">Money</label>
                 <Input
                   type="number"
-                  value={editEarnings}
-                  onChange={(e) => setEditEarnings(Number(e.target.value))}
+                  value={editEarnings ?? ''}
+                  onChange={(e) => setEditEarnings(e.target.value === '' ? null : Number(e.target.value))}
                   placeholder="Money"
                 />
               </div>
@@ -149,8 +149,8 @@ const PlayerList = forwardRef((props, ref) => {
                 <label className="block text-sm font-medium md:hidden">Wins</label>
                 <Input
                   type="number"
-                  value={editWins}
-                  onChange={(e) => setEditWins(Number(e.target.value))}
+                  value={editWins ?? ''}
+                  onChange={(e) => setEditWins(e.target.value === '' ? null : Number(e.target.value))}
                   placeholder="Wins"
                 />
               </div>
