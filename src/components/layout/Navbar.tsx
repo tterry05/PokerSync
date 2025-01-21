@@ -21,6 +21,7 @@ const Navbar = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,6 +73,7 @@ const Navbar = () => {
             PokerSync
           </Link>
           
+          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex space-x-8">
               {links.map((link) => (
@@ -139,10 +141,74 @@ const Navbar = () => {
             )}
           </div>
 
-          <button className="md:hidden">
-            <span className="sr-only">Open menu</span>
-            {/* Add your menu icon here */}
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden p-2" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <svg
+              stroke="currentColor"
+              fill="none"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-6 w-6"
+            >
+              {isMobileMenuOpen ? (
+                <path d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <>
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </>
+              )}
+            </svg>
           </button>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        <div 
+          className={`md:hidden absolute left-0 right-0 bg-background border-b border-border transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? 'max-h-[400px] opacity-100' : 'max-h-0 opacity-0'
+          } overflow-hidden`}
+        >
+          <div className="container mx-auto px-4 py-4 space-y-4">
+            {links.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className="block text-foreground/70 hover:text-foreground transition-colors py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            {user ? (
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  handleLogout();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full"
+              >
+                Logout
+              </Button>
+            ) : (
+              <Button 
+                variant="outline"
+                onClick={() => {
+                  setIsLoginOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full"
+              >
+                Login
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </nav>
