@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
+import Error404 from "./Error404";
 
 export default function SessionDetails() {
   const { sessionId } = useParams();
@@ -23,6 +24,7 @@ export default function SessionDetails() {
   const [cashOutAmount, setCashOutAmount] = useState({});
   const [rebuyAmount, setRebuyAmount] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -46,12 +48,17 @@ export default function SessionDetails() {
   }, [session]);
 
   const fetchSession = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('Sessions')
       .select('*')
       .eq('id', sessionId)
       .single();
-    setSession(data);
+    
+    if (error || !data) {
+      setNotFound(true);
+    } else {
+      setSession(data);
+    }
   };
 
 const fetchAvailablePlayers = async () => {
@@ -198,6 +205,10 @@ const fetchAvailablePlayers = async () => {
       setRebuyAmount(prev => ({ ...prev, [playerId]: '' }));
     }
   };
+
+  if (notFound) {
+    return <Error404 />;
+  }
 
   return (
     <div className="min-h-screen pt-16 pb-8 px-2 sm:pt-20 sm:pb-12 sm:px-4">
