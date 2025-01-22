@@ -22,6 +22,12 @@ const LeaderboardCard = ({ name, wins, earnings, index }: LeaderboardCardProps) 
     }
   };
 
+  const getEarningsColor = (earnings: number) => {
+    if (earnings > 0) return "text-green-600";
+    if (earnings < 0) return "text-red-600";
+    return "text-black dark:text-white"; // Use black in light mode, white in dark mode
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -44,7 +50,7 @@ const LeaderboardCard = ({ name, wins, earnings, index }: LeaderboardCardProps) 
         </div>
         
         <div className="text-right">
-          <p className="font-medium">${earnings}</p>
+          <p className={`font-medium ${getEarningsColor(earnings)}`}>${earnings}</p>
           <p className="text-sm text-muted-foreground">Total earnings</p>
         </div>
       </div>

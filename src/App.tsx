@@ -9,6 +9,7 @@ import Schedule from "./pages/Schedule";
 import Leaderboard from "./pages/Leaderboard";
 import Players from "./pages/Players";
 import Sessions from "./pages/Sessions";
+import SessionDetails from "./pages/SessionDetails";
 import Error404 from "./pages/Error404";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -42,6 +43,7 @@ const App = () => (
                     </ProtectedRoute>
                   } 
                 />
+                <Route path="/session/:sessionId" element={<SessionDetails />} />
                 <Route path="*" element={<Error404 />} />
               </Routes>
             </AnimatePresence>

@@ -35,7 +35,7 @@ const Navbar = () => {
 
       setIsLoginOpen(false);
       toast.success("Logged in successfully");
-      navigate(location.pathname); // Refresh current route
+      window.location.reload(); // Force full page refresh
     } catch (error: any) {
       toast.error(error.message);
     }

@@ -47,11 +47,11 @@ const AddSessionForm = ({ onSuccess }: AddSessionFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<SessionFormData>({
     defaultValues: {
-      date: '',
+      date: new Date().toISOString().split('T')[0], // Default to today’s date
       time: '',
-      location: '',
-      gameType: '',
-      buyIn: 0,
+      location: '402',
+      gameType: GAME_TYPES[0],
+      buyIn: 20,
       name: '',
       description: ''
     }

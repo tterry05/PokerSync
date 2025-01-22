@@ -10,9 +10,10 @@ interface GameCardProps {
   buyIn: number;
   name: string;
   description?: string;
+  players?: { name: string }[];
 }
 
-const GameCard = ({ date, time, location, gameType, buyIn, name, description }: GameCardProps) => {
+const GameCard = ({ date, time, location, gameType, buyIn, name, description, players }: GameCardProps) => {
   const formattedTime = format(parseISO(`${date}T${time}`), "EEEE hh:mm a");
 
   return (
@@ -56,6 +57,12 @@ const GameCard = ({ date, time, location, gameType, buyIn, name, description }: 
             <div className="mt-3 border-t pt-2">
               <span className="text-xs font-medium text-muted-foreground">Description:</span>
               <p className="text-sm text-foreground mt-1">{description}</p>
+            </div>
+          )}
+          {players && players.length > 0 && (
+            <div className="text-sm border-t pt-2">
+              <span className="font-medium text-foreground">Players: </span>
+              <span className="text-foreground">{players.map(p => p.name).join(", ")}</span>
             </div>
           )}
         </div>
